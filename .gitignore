@@ -61,7 +61,7 @@ data/media/series/*
 volumes/
 mounts/
 data/media/movies/*
-data/media/series/
+data/media/series/*
 
 # Environment files with sensitive data
 .env
