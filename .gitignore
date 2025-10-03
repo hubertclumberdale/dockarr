@@ -17,7 +17,6 @@ jellyfin/data/root/default/Movies/options.xml
 jellyfin/data/root/default/Shows/options.xml
 
 jellyseer/settings.old.json
-jellyseer/settings.json
 
 # Library content (media files)
 library/media/
