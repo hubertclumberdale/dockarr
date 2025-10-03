@@ -60,8 +60,6 @@ data/media/series/*
 # Docker volumes and bind mounts
 volumes/
 mounts/
-data/media/movies/*
-data/media/series/*
 
 # Environment files with sensitive data
 .env
