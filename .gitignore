@@ -1,0 +1,126 @@
+# Docker service runtime data (keep config templates)
+
+
+flemmarr/config.yml
+radarr/config.xml
+sonarr/config.xml
+
+jellyfin/.cache
+jellyfin/.aspnet
+jellyfin/data/data/ScheduledTasks
+jellyfin/data/data/playlists
+jellyfin/data/data/subtitles
+jellyfin/data/data/keyframes
+jellyfin/data/metadata
+jellyfin/system.xml
+jellyfin/data/root/default/Movies/options.xml
+jellyfin/data/root/default/Shows/options.xml
+
+jellyseer/settings.old.json
+jellyseer/settings.json
+
+# Library content (media files)
+library/media/
+library/torrents/
+data/media/movies/*
+data/media/series/*
+!data/media/movies/.gitkeep
+!data/media/series/.gitkeep
+*.mkv
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+*.m4v
+*.3gp
+
+# Audio files
+*.mp3
+*.flac
+*.wav
+*.aac
+*.ogg
+*.wma
+*.m4a
+
+# Subtitle files
+*.srt
+*.sub
+*.idx
+*.ass
+*.ssa
+*.vtt
+
+# Torrent files
+*.torrent
+*.magnet
+
+# Docker volumes and bind mounts
+volumes/
+mounts/
+data/media/movies/*
+data/media/series/
+
+# Environment files with sensitive data
+.env
+.env.local
+.env.production
+.env.development
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Cache directories
+cache/
+tmp/
+temp/
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node.js (if using any node tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (if using any python scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Certificate files
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
