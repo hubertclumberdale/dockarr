@@ -1,7 +1,7 @@
 {
- "clientId": "a57b74b2-d670-4147-bc61-00445b65e8d5",
- "vapidPrivate": "_OHyudN4zDSZpFe0suYYq_9ImJNHtt-wdmHCmSOv-xo",
- "vapidPublic": "BA2BacGvg274dFoIpctd05yhuIAV7_vPkIB2tiff_ytHdX_NWBeV9Ac6iSAb0EcLdYEge0MJ-sMLrGbLgApa32Y",
+ "clientId": "e43841a7-7daf-480b-a057-423363ae41c2",
+ "vapidPrivate": "2oj1HWygH7-K_uhn6Hwr9Uh7loLcT-VyjUIYbE2LT6A",
+ "vapidPublic": "BH-YqJ6nwsrGB4JIX86f3FJqjDIvDKcNv4h5JUjWR13PiaiyNH_lEktokHnQng-8m4_2l6RFgA61f3ww5MkrwRk",
  "main": {
   "apiKey": "${JELLYSEER_API_KEY}",
   "applicationTitle": "Jellyseerr Template",
@@ -36,7 +36,7 @@
   "libraries": []
  },
  "jellyfin": {
-  "name": "721286213e29",
+  "name": "795689e98a92",
   "ip": "${JELLYFIN_HOST}",
   "port": "${JELLYFIN_PORT}",
   "useSsl": false,
@@ -57,8 +57,8 @@
     "type": "show"
    }
   ],
-  "serverId": "5b6ba687a9d241bea7924e630a34c1ac",
-  "apiKey": "c99715e7d8404ba58ef1d8f9cb343bb8"
+  "serverId": "33d5f671e9f445f8b11183b2a1980d81",
+  "apiKey": "bb6df3b1c4054076a9cf7dd2b3cb88c3"
  },
  "tautulli": {},
  "radarr": [
