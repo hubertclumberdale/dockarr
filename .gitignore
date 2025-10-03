@@ -77,11 +77,6 @@ cache/
 tmp/
 temp/
 
-# Database files
-*.sqlite
-*.sqlite3
-*.db-journal
-
 # Backup files
 *.bak
 *.backup
