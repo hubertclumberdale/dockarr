@@ -15,9 +15,19 @@ if [ -f /sonarr-templates/config.template.xml ]; then
   echo '✅ Sonarr config generated'
 fi
 
-# Process flemmarr config
-if [ -f /flemmarr-templates/config.template.yml ]; then
-  envsubst < /flemmarr-templates/config.template.yml > /flemmarr-config/config.yml
+# Process flemmarr config - first compose from templates, then process variables
+echo '🔧 Composing flemmarr config from templates...'
+if [ -f /scripts/compose-config.sh ]; then
+  echo 'Found compose-config.sh, making executable and running...'
+  chmod +x /scripts/compose-config.sh
+  /scripts/compose-config.sh
+else
+  echo 'ERROR: /scripts/compose-config.sh not found!'
+  ls -la /scripts/
+fi
+
+if [ -f /flemmarr-config/config.template.yml ]; then
+  envsubst < /flemmarr-config/config.template.yml > /flemmarr-config/config.yml
   echo '✅ Flemmarr config generated'
 fi
 

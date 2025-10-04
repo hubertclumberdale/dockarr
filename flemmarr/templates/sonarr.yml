@@ -1,0 +1,191 @@
+sonarr:
+  server:
+    address: ${SONARR_HOST}
+    port: ${SONARR_PORT}
+  config:
+    host:
+      analyticsEnabled: false
+    ui:
+      firstDayOfWeek: 1 # 0 = Sunday, 1 = Monday
+      timeFormat:  HH:mm  # HH:mm = 17:30, h(:mm)a = 5:30PM
+    naming:
+      renameEpisodes: true
+      replaceIllegalCharacters: true
+      multiEpisodeStyle: 5
+      # https://trash-guides.info/Sonarr/Sonarr-recommended-naming-scheme/
+      standardEpisodeFormat: "{Series TitleYear} - S{season:00}E{episode:00} - {Episode
+        CleanTitle} [{Preferred Words }{Quality Full}]{[MediaInfo VideoDynamicRangeType]}{[Mediainfo
+        AudioCodec}{ Mediainfo AudioChannels]}{MediaInfo AudioLanguages}{[MediaInfo VideoCodec]}{-Release
+        Group}"
+      dailyEpisodeFormat: "{Series TitleYear} - {Air-Date} - {Episode CleanTitle} [{Preferred
+        Words }{Quality Full}]{[MediaInfo VideoDynamicRangeType]}{[Mediainfo AudioCodec}{
+        Mediainfo AudioChannels]}{MediaInfo AudioLanguages}{[MediaInfo VideoCodec]}{-Release
+        Group}"
+      animeEpisodeFormat: "{Series TitleYear} - S{season:00}E{episode:00} - {absolute:000}
+        - {Episode CleanTitle} [{Preferred Words }{Quality Full}]{[MediaInfo VideoDynamicRangeType]}[{MediaInfo
+        VideoBitDepth}bit]{[MediaInfo VideoCodec]}[{Mediainfo AudioCodec} { Mediainfo AudioChannels}]{MediaInfo
+        AudioLanguages}{-Release Group}"
+      seriesFolderFormat: "{Series TitleYear} [imdb-{ImdbId}]"
+      seasonFolderFormat: Season {season:00}
+      specialsFolderFormat: Specials
+      includeSeriesTitle: false
+      includeEpisodeTitle: false
+      includeQuality: false
+      replaceSpaces: true
+      separator: " - "
+      numberStyle: S{season:00}E{episode:00}
+    mediamanagement:
+      autoUnmonitorPreviouslyDownloadedEpisodes: false
+      recycleBin: ''
+      recycleBinCleanupDays: 7
+      downloadPropersAndRepacks: doNotUpgrade
+      createEmptySeriesFolders: false
+      deleteEmptyFolders: false
+      fileDate: none
+      rescanAfterRefresh: always
+      setPermissionsLinux: false
+      chmodFolder: '755'
+      chownGroup: ''
+      episodeTitleRequired: always
+      skipFreeSpaceCheckWhenImporting: true
+      minimumFreeSpaceWhenImporting: 100
+      copyUsingHardlinks: true
+      importExtraFiles: true
+      extraFileExtensions: srt
+      enableMediaInfo: true
+  rootfolder:
+    - name: Series
+      path: ${SERIES_PATH}
+      defaultTags: []
+      defaultQualityProfileId: 1
+      defaultMetadataProfileId: 1
+  downloadclient:
+    - name: qBittorrent
+      enable: true
+      protocol: torrent
+      priority: 2
+      removeCompletedDownloads: true
+      removeFailedDownloads: true
+      fields:
+      - name: host
+        value: ${QBITTORRENT_HOST}
+      - name: port
+        value: ${QBITTORRENT_PORT}
+      - name: username
+        value: ${QBITTORRENT_USERNAME}
+      - name: password
+        value: ${QBITTORRENT_PASSWORD}
+      - name: tvCategory
+        value: tv
+      - name: recentTvPriority
+        value: 0
+      - name: olderTvPriority
+        value: 0
+      - name: initialState
+        value: 0
+      - name: sequentialOrder
+        value: false
+      - name: firstAndLast
+        value: false
+      implementation: QBittorrent
+      configContract: QBittorrentSettings
+  # https://trash-guides.info/Sonarr/Sonarr-Quality-Settings-File-Size/
+  qualityDefinition:
+    7:
+      title: HDTV-720p
+      weight: 6
+      minSize: 10
+      maxSize: 67.5
+      preferredSize: 66.5
+      id: 7
+    8:
+      title: HDTV-1080p
+      weight: 7
+      minSize: 15
+      maxSize: 137.3
+      preferredSize: 136.3
+      id: 8
+    10:
+      title: WEBRip-720p
+      weight: 9
+      minSize: 10
+      maxSize: 137.3
+      preferredSize: 136.3
+      id: 10
+    11:
+      title: WEBDL-720p
+      weight: 9
+      minSize: 10
+      maxSize: 137.3
+      preferredSize: 136.3
+      id: 11
+    12:
+      title: Bluray-720p
+      weight: 10
+      minSize: 17.1
+      maxSize: 137.3
+      preferredSize: 136.3
+      id: 12
+    13:
+      title: WEBRip-1080p
+      weight: 11
+      minSize: 15
+      maxSize: 137.3
+      preferredSize: 136.3
+      id: 13
+    14:
+      title: WEBDL-1080p
+      weight: 11
+      minSize: 15
+      maxSize: 137.3
+      preferredSize: 136.3
+      id: 14
+    15:
+      title: Bluray-1080p
+      weight: 12
+      minSize: 50.4
+      maxSize: 227
+      preferredSize: 226
+      id: 15
+    16:
+      title: Bluray-1080p Remux
+      weight: 13
+      minSize: 69.1
+      maxSize: 400
+      preferredSize: 399
+      id: 16
+    17:
+      title: HDTV-2160p
+      weight: 14
+      minSize: 50.4
+      maxSize: 350
+      preferredSize: 349
+      id: 17
+    18:
+      title: WEBRip-2160p
+      weight: 15
+      minSize: 50.4
+      maxSize: 350
+      preferredSize: 349
+      id: 18
+    19:
+      title: WEBDL-2160p
+      weight: 15
+      minSize: 50.4
+      maxSize: 350
+      preferredSize: 349
+      id: 19
+    20:
+      title: Bluray-2160p
+      weight: 16
+      minSize: 94.6
+      maxSize: 400
+      preferredSize: 399
+      id: 20
+    21:
+      title: Bluray-2160p Remux
+      weight: 17
+      minSize: 204.4
+      maxSize: 400
+      preferredSize: 399
+      id: 21

@@ -1,0 +1,10 @@
+bazarr:
+  server:
+    address: ${BAZARR_HOST}
+    port: ${BAZARR_PORT}
+  config:
+    host:
+      analyticsEnabled: false
+    ui:
+      firstDayOfWeek: 1
+      timeFormat: HH:mm

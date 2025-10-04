@@ -14,7 +14,7 @@ services:
       - ./flemmarr:/flemmarr-config
       - ./jellyfin:/jellyfin-config
       - ./jellyseer:/jellyseer-config
-      - ./config-processor:/scripts:ro
+      - ./config-processor:/scripts
     command: ["/scripts/process-configs.sh"]
 
   # For downloading torrents
