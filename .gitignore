@@ -2,6 +2,9 @@
 
 
 flemmarr/config.yml
+flemmarr/config.template.yml
+
+
 radarr/config.xml
 sonarr/config.xml
 

@@ -17,13 +17,12 @@ fi
 
 # Process flemmarr config - first compose from templates, then process variables
 echo '🔧 Composing flemmarr config from templates...'
-if [ -f /scripts/compose-config.sh ]; then
+if [ -f /flemmarr-config/compose-config.sh ]; then
   echo 'Found compose-config.sh, making executable and running...'
-  chmod +x /scripts/compose-config.sh
-  /scripts/compose-config.sh
+  chmod +x /flemmarr-config/compose-config.sh
+  /flemmarr-config/compose-config.sh
 else
-  echo 'ERROR: /scripts/compose-config.sh not found!'
-  ls -la /scripts/
+  echo 'ERROR: /flemmarr-config/compose-config.sh not found!'
 fi
 
 if [ -f /flemmarr-config/config.template.yml ]; then
