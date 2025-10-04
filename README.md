@@ -1,6 +1,9 @@
 
 # Dockarr 🐳📺
 
+Why spend 1 hour manually configuring and deploying your arr stack, when I can spend days trying to fully automate the configuratio and deploy process?
+I present you.... *drums roll please*
+
 **A fully automated, plug-and-play media server stack using Docker**
 
 Dockarr is a comprehensive Docker Compose setup that deploys and pre-configures a complete media server ecosystem. It includes everything you need for downloading, organizing, and streaming your media collection with minimal setup required.
@@ -8,10 +11,8 @@ Dockarr is a comprehensive Docker Compose setup that deploys and pre-configures 
 ## 🌟 Features
 
 - **🔄 Fully Automated Setup**: One command deployment with pre-configured services
-- **📱 Modern Web Interface**: Access all services through clean web UIs
 - **🔧 Template-Based Configuration**: Automatic configuration processing for all services
 - **🚀 Development Ready**: Quick start/stop commands for easy development
-- **🎯 Production Ready**: Optimized configurations for stable operation
 
 ## 🏗️ Services Included
 
@@ -54,19 +55,21 @@ Dockarr is a comprehensive Docker Compose setup that deploys and pre-configures 
 3. **Access your services**
    
    Once started, you can access:
-   - 📺 **Jellyfin**: http://localhost:8096
-   - 🎬 **Jellyseerr**: http://localhost:5055
-   - 🎭 **Radarr**: http://localhost:7878
-   - 📺 **Sonarr**: http://localhost:8989
-   - 📥 **qBittorrent**: http://localhost:8080
-   - 🔍 **Prowlarr**: http://localhost:9696
-   - 🎯 **Bazarr**: http://localhost:6767
+   - 📺 **Jellyfin** (Media player): http://localhost:8096
+	- 🎬 **Jellyseerr** (Request Movies & TV shows): http://localhost:5055
+	- 🎭 **Radarr** (Movie downloader): http://localhost:7878
+	- 📺 **Sonarr** (TV show downloader): http://localhost:8989
+	- 📥 **qBittorrent** (Torrent client): http://localhost:8080
+	- 🔍 **Prowlarr** (Indexer manager): http://localhost:9696
+	- 🎯 **Bazarr** (Subtitles manager): http://localhost:6767
 
 ## 🔑 Default Credentials
 
 ### Jellyfin & Jellyseerr
 - **Username**: `admin`
 - **Password**: `admin`
+
+This because I didn't find a way to inject the admin user when setting up the stacks
 
 ### qBittorrent
 - **Username**: `admin`  
@@ -131,11 +134,6 @@ SERIES_PATH=/your/series/path
 ### Network Configuration
 All services communicate through Docker's internal network. External access is available through the specified ports.
 
-### SSL/HTTPS
-HTTPS ports are pre-configured but require certificate setup:
-- Sonarr HTTPS: `9898`
-- Jellyfin HTTPS: `8920`
-
 ## 🐛 Troubleshooting
 
 ### Services won't start
@@ -172,5 +170,12 @@ This project is open source. Please check the LICENSE file for details.
 ## ⭐ Acknowledgments
 
 - Built with Docker and Docker Compose
-- Uses LinuxServer.io images for reliable, well-maintained containers
 - Flemmarr for automated Arr stack configuration
+
+## TODO List
+
+- [ ] Setup media path from .env file
+- [ ] Setup certificates for all SSL/HTTPS ports
+- [ ] Configure VPN for external access
+- [ ] Implement internal VPN for additional security
+
