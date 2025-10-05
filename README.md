@@ -1,20 +1,16 @@
 
 # Dockarr 🐳📺
 
-Why spend 1 hour manually configuring and deploying your arr stack, when I can spend days trying to fully automate the configuratio and deploy process?
-I present you.... *drums roll please*
-
 **A fully automated, plug-and-play media server stack using Docker**
 
-Dockarr is a comprehensive Docker Compose setup that deploys and pre-configures a complete media server ecosystem. It includes everything you need for downloading, organizing, and streaming your media collection with minimal setup required.
+Complete media server ecosystem with automated configuration, VPN protection, and one-command deployment. Everything you need for downloading, organizing, and streaming your media collection.
 
-## 🌟 Features
+## ✨ Key Features
 
-- **🔄 Fully Automated Setup**: One command deployment with pre-configured services
-- **🔧 Template-Based Configuration**: Automatic configuration processing for all services
-- **🚀 Development Ready**: Quick start/stop commands for easy development
-- **🛡️ VPN Protection**: Optional NordVPN integration for downloading services
-- **🌐 Local Network Access**: VPN-protected services remain accessible from your local network
+- **🔄 One-Command Setup** - Fully automated deployment with pre-configured services  
+- **�️ VPN Protection** - Optional NordVPN integration with local network access
+- **🎯 Complete Stack** - All services pre-configured to work together
+- **🚀 Easy Management** - Simple make commands for all operations
 
 ## 🏗️ Services Included
 
@@ -31,103 +27,72 @@ Dockarr is a comprehensive Docker Compose setup that deploys and pre-configures 
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Docker & Docker Compose
-- Make (for convenient commands)
+**Prerequisites:** Docker, Docker Compose, Make
 
-### Installation
+```bash
+# 1. Clone and start
+git clone <repository-url>
+cd dockarr
+make dev
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd dockarr
-   ```
-
-2. **Start the stack**
-   ```bash
-   make dev
-   ```
-   
-   This command will:
-   - Create `.env` file from template (if needed)
-   - Process configuration templates
-   - Start all services
-   - Display service URLs
-
-3. **Access your services**
-   
-   Once started, you can access:
-   - 📺 **Jellyfin** (Media player): http://localhost:8096
-	- 🎬 **Jellyseerr** (Request Movies & TV shows): http://localhost:5055
-	- 🎭 **Radarr** (Movie downloader): http://localhost:7878
-	- 📺 **Sonarr** (TV show downloader): http://localhost:8989
-	- 📥 **qBittorrent** (Torrent client): http://localhost:8080
-	- 🔍 **Prowlarr** (Indexer manager): http://localhost:9696
-	- 🎯 **Bazarr** (Subtitles manager): http://localhost:6767
+# 2. Access services at:
+# 📺 Jellyfin (Media):        http://localhost:8096
+# 🎬 Jellyseerr (Requests):   http://localhost:5055  
+# 🎭 Radarr (Movies):         http://localhost:7878
+# 📺 Sonarr (TV Shows):       http://localhost:8989
+# 📥 qBittorrent (Torrents):  http://localhost:8080
+# 🔍 Prowlarr (Indexers):     http://localhost:9696
+# 🎯 Bazarr (Subtitles):      http://localhost:6767
+```
 
 ## 🔑 Default Credentials
 
-### Jellyfin & Jellyseerr
-- **Username**: `admin`
-- **Password**: `admin`
+| Service | Username | Password |
+|---------|----------|----------|
+| Jellyfin & Jellyseerr | `admin` | `admin` |
+| qBittorrent | `admin` | `adminadmin` |
 
-This because I didn't find a way to inject the admin user when setting up the stacks
+> ⚠️ **Change these after first login!**
 
-### qBittorrent
-- **Username**: `admin`  
-- **Password**: `adminadmin`
+## 🛡️ VPN Protection (Optional)
 
-> ⚠️ **Security Note**: Change these default credentials after first login in production environments.
-
-## ⚙️ Configuration
-
-The project uses environment variables for configuration. Key settings can be modified in the `.env` file:
+Protect your downloads with NordVPN while keeping services accessible locally.
 
 ```bash
-# Media paths
-MOVIES_PATH=/data/media/movies
-SERIES_PATH=/data/media/series
+# 1. Get NordVPN token from your account dashboard
+# 2. Enable VPN in .env:
+NORDVPN_ENABLED=true
+NORDVPN_TOKEN=your_token_here
+NORDVPN_COUNTRY=United_States
 
-# Timezone
-TZ=Europe/Amsterdam
-
-# Language settings
-UI_LANGUAGE=1  # 1=English, 2=French, 3=Spanish...
-JELLYFIN_PREFERRED_METADATA_LANGUAGE=en
+# 3. Start with VPN
+make vpn-enable && make dev
 ```
 
-## 🛠️ Available Commands
+**VPN Protected:** qBittorrent, Prowlarr  
+**Direct Access:** Jellyfin, Jellyseerr, Radarr, Sonarr, Bazarr
+
+## 🛠️ Commands
 
 | Command | Description |
 |---------|-------------|
-| `make dev` | Start development environment (auto-detects VPN setting) |
-| `make dev-vpn` | Start with VPN protection enabled |
-| `make dev-no-vpn` | Start without VPN protection |
-| `make vpn-enable` | Enable VPN in .env file |
-| `make vpn-disable` | Disable VPN in .env file |
-| `make vpn-status` | Check VPN connection status |
-| `make logs-vpn` | View VPN logs |
+| `make dev` | Start all services (auto-detects VPN) |
 | `make stop` | Stop all services |
-| `make logs` | View service logs |
-| `make clean` | Clean up Docker resources |
-| `make setup` | Complete automated setup |
-| `make quick-setup` | Quick setup (directories + .env) |
+| `make logs` | View logs |
+| `make clean` | Clean up everything |
+| `make vpn-enable` | Enable VPN protection |
+| `make vpn-disable` | Disable VPN protection |
+| `make vpn-status` | Check VPN connection |
 
-## 📁 Project Structure
+## ⚙️ Configuration
 
-```
-dockarr/
-├── docker-compose.development.yml  # Main Docker Compose file
-├── Makefile                       # Convenient commands
-├── .env.example                   # Environment template
-├── config-processor/              # Configuration processing scripts
-├── data/                         # Shared data volume
-├── flemmarr/                     # Flemmarr configuration
-├── jellyfin/                     # Jellyfin configuration & data
-├── jellyseer/                    # Jellyseerr configuration
-├── qbittorrent/                  # qBittorrent configuration
-├── radarr/                       # Radarr configuration templates
-└── sonarr/                       # Sonarr configuration templates
+Edit `.env` file for customization:
+```bash
+TZ=Europe/Amsterdam              # Your timezone
+MOVIES_PATH=/data/media/movies   # Movies location  
+SERIES_PATH=/data/media/series   # TV shows location
+NORDVPN_ENABLED=true            # Enable/disable VPN
+NORDVPN_TOKEN=your_token        # Your NordVPN token
 ```
 
 ## 🔧 Advanced Configuration
@@ -198,71 +163,11 @@ make vpn-status
 
 ## �🐛 Troubleshooting
 
-### Services won't start
-```bash
-# Check service status
-docker-compose -f docker-compose.development.yml ps
+**Services won't start:** `make logs` → `make clean` → `make dev`  
+**VPN issues:** `make vpn-status` → Check token in `.env`  
+**Port conflicts:** Check `.env` file port assignments  
+**Can't access VPN services:** Update `NORDVPN_NETWORK` to match your router's IP range
 
-# View logs
-make logs
-```
+---
 
-### Configuration issues
-```bash
-# Clean and restart
-make clean
-make dev
-```
-
-### Port conflicts
-Check your `.env` file for port assignments and ensure they don't conflict with other services.
-
-### VPN Issues
-
-**VPN not connecting:**
-```bash
-# Check VPN logs
-make logs-vpn
-
-# Restart VPN service
-docker-compose -f docker-compose.development.yml restart nordvpn
-```
-
-**Services behind VPN not accessible:**
-```bash
-# Verify NORDVPN_NETWORK matches your local network
-# Check your router's IP range (usually 192.168.x.x or 10.x.x.x)
-# Update .env file accordingly
-NORDVPN_NETWORK=192.168.1.0/24  # Adjust to your network
-```
-
-**Invalid VPN token:**
-- Generate a new token from NordVPN dashboard
-- Ensure token is copied correctly to .env file
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## 📄 License
-
-This project is open source. Please check the LICENSE file for details.
-
-## ⭐ Acknowledgments
-
-- Built with Docker and Docker Compose
-- Flemmarr for automated Arr stack configuration
-
-## TODO List
-- [ ] Integrate Lidarr for music management
-- [ ] Integrate Navidome for music streaming 
-- [ ] Integrate Bazaar for automatic subtitles download and management
-- [ ] Setup media path from .env file
-- [ ] Automatically configure quality profile and language rules in Sonarr and Radarr
-- [ ] Configure VPN for external access
-- [x] ~~Implement internal VPN for additional security~~ ✅ **DONE**: NordVPN integration with local network access
-- [ ] Setup certificates for all SSL/HTTPS ports
+**That's it! 🎉 Your complete media server with VPN protection is ready to go.**
