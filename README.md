@@ -173,9 +173,11 @@ This project is open source. Please check the LICENSE file for details.
 - Flemmarr for automated Arr stack configuration
 
 ## TODO List
-
+- [ ] Integrate Lidarr for music management
+- [ ] Integrate Navidome for music streaming 
+- [ ] Integrate Bazaar for automatic subtitles download and management
 - [ ] Setup media path from .env file
-- [ ] Setup certificates for all SSL/HTTPS ports
+- [ ] Automatically configure quality profile and language rules in Sonarr and Radarr
 - [ ] Configure VPN for external access
 - [ ] Implement internal VPN for additional security
-
+- [ ] Setup certificates for all SSL/HTTPS ports
