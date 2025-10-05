@@ -18,6 +18,7 @@ dev: ## Start development environment (setup + start + show URLs)
 	@echo "📥 qBittorrent (Torrent client):      http://localhost:8080"
 	@echo "🔍 Prowlarr (Indexer manager):        http://localhost:9696"
 	@echo "🎯 Bazarr (Subtitles manager):        http://localhost:6767"
+	@echo "🎵 Lidarr (Music downloader):         http://localhost:8686"
 	@echo ""
 	@echo "✅ Development environment ready!"
 

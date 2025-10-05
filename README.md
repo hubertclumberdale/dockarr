@@ -173,7 +173,6 @@ This project is open source. Please check the LICENSE file for details.
 - Flemmarr for automated Arr stack configuration
 
 ## TODO List
-- [ ] Integrate Lidarr for music management
 - [ ] Integrate Navidome for music streaming 
 - [ ] Integrate Bazaar for automatic subtitles download and management
 - [ ] Setup media path from .env file
