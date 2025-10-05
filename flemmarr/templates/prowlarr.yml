@@ -713,3 +713,14 @@ prowlarr:
           value: http://${RADARR_HOST}:${RADARR_PORT}
         - name: apiKey
           value: ${RADARR_API_KEY}
+    - name: Lidarr
+      syncLevel: addOnly
+      implementation: Lidarr
+      configContract: LidarrSettings
+      fields:
+        - name: prowlarrUrl
+          value: http://${PROWLARR_HOST}:${PROWLARR_PORT}
+        - name: baseUrl
+          value: http://${LIDARR_HOST}:${LIDARR_PORT}
+        - name: apiKey
+          value: ${LIDARR_API_KEY}
