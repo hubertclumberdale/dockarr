@@ -33,7 +33,9 @@ services:
     volumes:
       - ./gluetun:/gluetun
     networks:
-      - dockarr-network
+      dockarr-network:
+        aliases:
+          - qbittorrent  # Allow other containers to reach qBittorrent through gluetun
     restart: unless-stopped
 
 
