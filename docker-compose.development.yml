@@ -8,26 +8,26 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     ports:
-      - ${QBITTORRENT_PORT}:8080   # qBittorrent WebUI
-      - 8888:8888/tcp              # Gluetun control server
+      - ${QBITTORRENT_PORT}:8080 # qBittorrent WebUI
+      - 8888:8888/tcp # Gluetun control server
     environment:
       # VPN Provider Configuration
       - VPN_SERVICE_PROVIDER=nordvpn
       - OPENVPN_USER=${NORDVPN_USERNAME}
       - OPENVPN_PASSWORD=${NORDVPN_PASSWORD}
       - SERVER_COUNTRIES=${NORDVPN_COUNTRY:-United States}
-      
+
       # Network Configuration
       - FIREWALL=on
       - FIREWALL_VPN_INPUT_PORTS=8080
       - FIREWALL_INPUT_PORTS=8888
       - DOT=on
       - DOT_PROVIDERS=cloudflare
-      
+
       # Health check
       - HEALTH_VPN_DURATION_INITIAL=30s
       - HEALTH_SUCCESS_WAIT_DURATION=5s
-      
+
       # Timezone
       - TZ=${TZ}
     volumes:
@@ -35,9 +35,8 @@ services:
     networks:
       dockarr-network:
         aliases:
-          - qbittorrent  # Allow other containers to reach qBittorrent through gluetun
+          - qbittorrent # Allow other containers to reach qBittorrent through gluetun
     restart: unless-stopped
-
 
   config-processor:
     image: alpine:latest
@@ -58,7 +57,6 @@ services:
     networks:
       - dockarr-network
 
-
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -69,13 +67,12 @@ services:
       - UMASK=022
     volumes:
       - qbittorrent_config:/config
-      - ${DATA_PATH}:/data/media          # media condivisa
+      - ${DATA_PATH}:/data/media # media condivisa
       - ./qbittorrent/qBittorrent.conf:/config/qBittorrent/qBittorrent.conf:ro
     restart: unless-stopped
     depends_on:
       gluetun:
         condition: service_healthy
-
 
   flemmarr:
     image: pierremesure/flemmarr:latest
@@ -84,7 +81,7 @@ services:
       - .env
     volumes:
       - ./flemmarr:/config
-      - ${DATA_PATH}:/data/media         
+      - ${DATA_PATH}:/data/media
     depends_on:
       config-processor:
         condition: service_completed_successfully
@@ -101,7 +98,6 @@ services:
     networks:
       - dockarr-network
 
-
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
@@ -113,14 +109,13 @@ services:
       - .env
     volumes:
       - sonarr_config:/config
-      - ${DATA_PATH}:/data/media         
+      - ${DATA_PATH}:/data/media
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
     networks:
       - dockarr-network
-
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -133,14 +128,13 @@ services:
       - .env
     volumes:
       - radarr_config:/config
-      - ${DATA_PATH}:/data/media         
+      - ${DATA_PATH}:/data/media
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
     networks:
       - dockarr-network
-
 
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
@@ -151,14 +145,13 @@ services:
       - TZ=${TZ}
     volumes:
       - ./jellyseer:/app/config
-      - ${DATA_PATH}:/data/media          # per accesso film/serie
+      - ${DATA_PATH}:/data/media # per accesso film/serie
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
     networks:
       - dockarr-network
-
 
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
@@ -170,14 +163,13 @@ services:
       - TZ=${TZ}
     volumes:
       - ./jellyfin:/config
-      - ${DATA_PATH}:/data/media         
+      - ${DATA_PATH}:/data/media
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
     networks:
       - dockarr-network
-
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -193,7 +185,6 @@ services:
     networks:
       - dockarr-network
 
-
   bazarr:
     container_name: bazarr
     image: lscr.io/linuxserver/bazarr:latest
@@ -203,11 +194,10 @@ services:
       - TZ=${TZ}
     volumes:
       - bazarr_config:/config
-      - ${DATA_PATH}:/data/media         
+      - ${DATA_PATH}:/data/media
     restart: unless-stopped
     networks:
       - dockarr-network
-
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -222,6 +212,17 @@ services:
     networks:
       - dockarr-network
 
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    profiles: ["monitoring"]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - ${DOZZLE_PORT}:8080
+    restart: unless-stopped
+    networks:
+      - dockarr-network
 
 volumes:
   qbittorrent_config:
