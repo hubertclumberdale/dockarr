@@ -70,6 +70,7 @@ services:
     volumes:
       - qbittorrent_config:/config
       - ${DATA_PATH}:/data/media # media condivisa
+      - ${DATA_PATH}/downloads:/downloads # qBittorrent downloads
       - ./qbittorrent/qBittorrent.conf:/config/qBittorrent/qBittorrent.conf:ro
     restart: unless-stopped
     depends_on:
@@ -114,6 +115,7 @@ services:
     volumes:
       - sonarr_config:/config
       - ${DATA_PATH}:/data/media
+      - ${DATA_PATH}/downloads:/downloads
     restart: unless-stopped
     depends_on:
       config-processor:
@@ -135,6 +137,7 @@ services:
     volumes:
       - radarr_config:/config
       - ${DATA_PATH}:/data/media
+      - ${DATA_PATH}/downloads:/downloads
     restart: unless-stopped
     depends_on:
       config-processor:
