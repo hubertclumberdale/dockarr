@@ -42,7 +42,7 @@ SERIES_DIR=""
 MUSIC_DIR=""
 
 # Source .env.example to get dynamic paths
-if [ -f .env.example ]; then
+if [ -f .env ]; then
     # Extract paths from .env.example
     DATA_PATH_VAL=$(grep "^DATA_PATH=" .env.example | cut -d'=' -f2)
     MOVIES_PATH_VAL=$(grep "^MOVIES_PATH=" .env.example | cut -d'=' -f2)
