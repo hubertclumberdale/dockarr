@@ -35,6 +35,12 @@ fi
 # Create data directories with proper permissions
 echo "📁 Creating data directories..."
 
+# Initialize variables
+BASE_DATA_DIR="./data"
+MOVIES_DIR=""
+SERIES_DIR=""
+MUSIC_DIR=""
+
 # Source .env.example to get dynamic paths
 if [ -f .env.example ]; then
     # Extract paths from .env.example
@@ -43,8 +49,8 @@ if [ -f .env.example ]; then
     SERIES_PATH_VAL=$(grep "^SERIES_PATH=" .env.example | cut -d'=' -f2)  
     MUSIC_PATH_VAL=$(grep "^MUSIC_PATH=" .env.example | cut -d'=' -f2)
     
-    # Convert relative paths and create directories
-    BASE_DATA_DIR=${DATA_PATH_VAL#./}  # Remove ./ prefix if present
+    # Use the actual DATA_PATH (could be relative like ./data or absolute like /mnt/media/media)
+    BASE_DATA_DIR="$DATA_PATH_VAL"
     
     # Create base data directory
     mkdir -p "$BASE_DATA_DIR"
@@ -62,19 +68,23 @@ if [ -f .env.example ]; then
     echo "✅ Created media directories: $MOVIES_DIR, $SERIES_DIR, $MUSIC_DIR"
 else
     # Fallback to default structure
-    mkdir -p data/media/{movies,series,music}
+    BASE_DATA_DIR="./data"
+    mkdir -p "$BASE_DATA_DIR/media/movies"
+    mkdir -p "$BASE_DATA_DIR/media/series"
+    mkdir -p "$BASE_DATA_DIR/media/music"
     echo "✅ Created default media directories (movies, series, music)"
 fi
 
 # Create downloads directories
-mkdir -p data/downloads/{complete,incomplete}
+mkdir -p "$BASE_DATA_DIR/downloads/complete"
+mkdir -p "$BASE_DATA_DIR/downloads/incomplete"
 
 # Set proper ownership
-chown -R $CURRENT_PUID:$CURRENT_PGID data/
+chown -R $CURRENT_PUID:$CURRENT_PGID "$BASE_DATA_DIR"/
 echo "✅ Set ownership of data directories to $CURRENT_PUID:$CURRENT_PGID"
 
 # Set proper permissions
-chmod -R 755 data/
+chmod -R 755 "$BASE_DATA_DIR"/
 echo "✅ Set permissions (755) for data directories"
 
 echo ""
@@ -84,11 +94,17 @@ echo ""
 echo "📋 Your configuration:"
 echo "   PUID: $CURRENT_PUID"
 echo "   PGID: $CURRENT_PGID"
-echo "   Data path: $(pwd)/data"
+echo "   Data path: $BASE_DATA_DIR"
 echo ""
 echo "📁 Directory structure created:"
-echo "   $(pwd)/data/media/$MOVIES_DIR (movies)"
-echo "   $(pwd)/data/media/$SERIES_DIR (TV series)"  
-echo "   $(pwd)/data/media/$MUSIC_DIR (music)"
-echo "   $(pwd)/data/downloads/complete"
-echo "   $(pwd)/data/downloads/incomplete"
+if [ -n "$MOVIES_DIR" ]; then
+    echo "   $BASE_DATA_DIR/media/$MOVIES_DIR (movies)"
+    echo "   $BASE_DATA_DIR/media/$SERIES_DIR (TV series)"  
+    echo "   $BASE_DATA_DIR/media/$MUSIC_DIR (music)"
+else
+    echo "   $BASE_DATA_DIR/media/movies"
+    echo "   $BASE_DATA_DIR/media/series"  
+    echo "   $BASE_DATA_DIR/media/music"
+fi
+echo "   $BASE_DATA_DIR/downloads/complete"
+echo "   $BASE_DATA_DIR/downloads/incomplete"
