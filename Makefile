@@ -13,7 +13,7 @@ dev: ## Start development environment (setup + start + show URLs)
 dev-vpn: ## Start development environment with VPN protection
 	@if [ ! -f .env ]; then cp .env.example .env; echo "✅ Created .env file"; fi
 	@echo "🛡️  Starting development environment with NordVPN protection..."
-	@docker-compose -f docker-compose.development.yml --profile vpn up -d
+	@docker compose -f docker-compose.development.yml --profile vpn up -d
 	@echo ""
 	@echo "🌐 Services available at:"
 	@echo "📺 Jellyfin (Media player):           http://localhost:8096"
@@ -29,7 +29,7 @@ dev-vpn: ## Start development environment with VPN protection
 dev-no-vpn: ## Start development environment without VPN
 	@if [ ! -f .env ]; then cp .env.example .env; echo "✅ Created .env file"; fi
 	@echo "🚀 Starting development environment without VPN..."
-	@docker-compose -f docker-compose.development.yml --profile no-vpn up -d
+	@docker compose -f docker-compose.development.yml --profile no-vpn up -d
 	@echo ""
 	@echo "🌐 Services available at:"
 	@echo "📺 Jellyfin (Media player):           http://localhost:8096"
@@ -43,13 +43,13 @@ dev-no-vpn: ## Start development environment without VPN
 	@echo "✅ Development environment ready!"
 
 stop: ## Stop all services
-	@docker-compose -f docker-compose.development.yml --profile vpn --profile no-vpn down
+	@docker compose -f docker-compose.development.yml --profile vpn --profile no-vpn down
 
 logs: ## Show logs
-	@docker-compose -f docker-compose.development.yml --profile vpn --profile no-vpn logs -f
+	@docker compose -f docker-compose.development.yml --profile vpn --profile no-vpn logs -f
 
 logs-vpn: ## Show VPN logs
-	@docker-compose -f docker-compose.development.yml logs -f nordvpn
+	@docker compose -f docker-compose.development.yml logs -f nordvpn
 
 vpn-status: ## Check VPN connection status
 	@docker exec nordvpn nordvpn status 2>/dev/null || echo "❌ NordVPN container not running"
@@ -63,7 +63,7 @@ vpn-disable: ## Disable VPN in .env file
 	@echo "✅ VPN disabled in .env file. Run 'make dev' to restart without VPN protection."
 
 clean: ## Clean up Docker resources
-	@docker-compose -f docker-compose.development.yml --profile vpn --profile no-vpn down -v
+	@docker compose -f docker-compose.development.yml --profile vpn --profile no-vpn down -v
 	@docker system prune -f
 	@echo "🧹 Cleaned up Docker resources"
 
