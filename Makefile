@@ -23,20 +23,20 @@ stop: ## Stop all services
 logs: ## Show logs
 	@docker compose -f docker-compose.development.yml logs -f
 
-vpn-test: ## Test VPN connection for qBittorrent
-	@echo "🔍 Testing VPN connection..."
+vpn-test: ## Test VPN connection for qBittorrent  
+	@echo "🔍 Testing VPN connection (requires sudo)..."
 	@echo ""
 	@echo "📍 Gluetun (VPN) IP:"
-	@docker exec gluetun wget -qO- ifconfig.me 2>/dev/null || echo "❌ Could not get Gluetun IP"
+	@sudo docker exec gluetun wget -qO- ifconfig.me/ip 2>/dev/null || sudo docker exec gluetun wget -qO- icanhazip.com 2>/dev/null || echo "❌ Could not get Gluetun IP"
 	@echo ""
 	@echo "📍 qBittorrent IP (should match above):"
-	@docker exec qbittorrent wget -qO- ifconfig.me 2>/dev/null || echo "❌ Could not get qBittorrent IP"
-	@echo ""
+	@sudo docker exec qbittorrent wget -qO- ifconfig.me/ip 2>/dev/null || sudo docker exec qbittorrent wget -qO- icanhazip.com 2>/dev/null || echo "❌ Could not get qBittorrent IP"
+	@echo ""  
 	@echo "📍 Your server's real IP (should be different):"
-	@wget -qO- ifconfig.me 2>/dev/null || curl -s ifconfig.me 2>/dev/null || echo "❌ Could not get server IP"
+	@wget -qO- ifconfig.me/ip 2>/dev/null || curl -s ifconfig.me/ip 2>/dev/null || wget -qO- icanhazip.com 2>/dev/null || echo "❌ Could not get server IP"
 	@echo ""
-	@echo "🔍 VPN Status:"
-	@docker exec gluetun cat /tmp/gluetun/ip 2>/dev/null && echo " (VPN Connected)" || echo "❌ VPN status unknown"
+	@echo "🔍 Gluetun container logs (last 5 lines):"
+	@sudo docker logs gluetun --tail 5 2>/dev/null || echo "❌ Could not get Gluetun logs"
 	@echo ""
 	@echo "✅ If Gluetun IP ≠ Server IP, your VPN is working!"
 
