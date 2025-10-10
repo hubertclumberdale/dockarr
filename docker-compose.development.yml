@@ -7,8 +7,8 @@ services:
       - NET_ADMIN
       - NET_RAW
     ports:
-      - ${QBITTORRENT_PORT}:8080  # qBittorrent web UI
-      - ${PROWLARR_PORT}:9696     # Prowlarr web UI
+      - ${QBITTORRENT_PORT}:8080
+      - ${PROWLARR_PORT}:9696
     environment:
       - TOKEN=${NORDVPN_TOKEN}
       - CONNECT=${NORDVPN_COUNTRY:-United_States}
@@ -25,7 +25,6 @@ services:
     profiles:
       - vpn
 
-  # Init container per processare tutti i template di configurazione
   config-processor:
     image: alpine:latest
     container_name: config-processor
@@ -44,9 +43,7 @@ services:
     command: ["/scripts/process-configs.sh"]
     profiles:
       - vpn
-      - no-vpn
 
-  # For downloading torrents (with VPN)
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -57,7 +54,7 @@ services:
       - UMASK=022
     volumes:
       - qbittorrent_config:/config
-      - qbittorrent_downloads:/downloads
+      - /mnt/media/media:/data/media          media condivisa
       - ./qbittorrent/qBittorrent.conf:/config/qBittorrent/qBittorrent.conf:ro
     restart: unless-stopped
     depends_on:
@@ -65,25 +62,6 @@ services:
     profiles:
       - vpn
 
-  # For downloading torrents (without VPN)
-  qbittorrent-no-vpn:
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
-    ports:
-      - ${QBITTORRENT_PORT}:8080
-    environment:
-      - TZ=${TZ}
-      - WEBUI_PORT=${QBITTORRENT_PORT}
-      - UMASK=022
-    volumes:
-      - qbittorrent_config:/config
-      - qbittorrent_downloads:/downloads
-      - ./qbittorrent/qBittorrent.conf:/config/qBittorrent/qBittorrent.conf:ro
-    restart: unless-stopped
-    profiles:
-      - no-vpn
-
-  # For configuring all Arr services (with VPN)
   flemmarr:
     image: pierremesure/flemmarr:latest
     container_name: flemmarr
@@ -91,6 +69,7 @@ services:
       - .env
     volumes:
       - ./flemmarr:/config
+      - /mnt/media/media:/data/media         
     depends_on:
       config-processor:
         condition: service_completed_successfully
@@ -107,31 +86,6 @@ services:
     profiles:
       - vpn
 
-  # For configuring all Arr services (without VPN)
-  flemmarr-no-vpn:
-    image: pierremesure/flemmarr:latest
-    container_name: flemmarr
-    env_file:
-      - .env
-    volumes:
-      - ./flemmarr:/config
-    depends_on:
-      config-processor:
-        condition: service_completed_successfully
-      sonarr:
-        condition: service_started
-      radarr:
-        condition: service_started
-      prowlarr-no-vpn:
-        condition: service_started
-      bazarr:
-        condition: service_started
-      qbittorrent-no-vpn:
-        condition: service_started
-    profiles:
-      - no-vpn
-
-  # For managing TV shows
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
@@ -143,17 +97,14 @@ services:
       - .env
     volumes:
       - sonarr_config:/config
-      - ./data:/data
-      - qbittorrent_downloads:/downloads
+      - /mnt/media/media:/data/media         
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
     profiles:
       - vpn
-      - no-vpn
 
-  # For managing movies
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
@@ -165,17 +116,14 @@ services:
       - .env
     volumes:
       - radarr_config:/config
-      - ./data:/data
-      - qbittorrent_downloads:/downloads
+      - /mnt/media/media:/data/media         
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
     profiles:
       - vpn
-      - no-vpn
 
-  # For managing requests
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
@@ -185,35 +133,32 @@ services:
       - TZ=${TZ}
     volumes:
       - ./jellyseer:/app/config
-    restart: unless-stopped
-    depends_on:
-      config-processor:
-          condition: service_completed_successfully
-    profiles:
-      - vpn
-      - no-vpn
-
-  # Media server
-  jellyfin:
-    image: lscr.io/linuxserver/jellyfin:latest
-    container_name: jellyfin
-    ports:
-      - ${JELLYFIN_PORT}:8096 # interfaccia web
-      - ${JELLYFIN_HTTPS_PORT}:8920 # https opzionale
-    environment:
-      - TZ=${TZ}
-    volumes:
-      - ./jellyfin:/config      # Bind mount diretto alla cartella Git
-      - ./data:/data
+      - /mnt/media/media:/data/media          per accesso film/serie
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
     profiles:
       - vpn
-      - no-vpn
 
-  # For bypassing Cloudflare
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    ports:
+      - ${JELLYFIN_PORT}:8096
+      - ${JELLYFIN_HTTPS_PORT}:8920
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./jellyfin:/config
+      - /mnt/media/media:/data/media         
+    restart: unless-stopped
+    depends_on:
+      config-processor:
+        condition: service_completed_successfully
+    profiles:
+      - vpn
+
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
@@ -227,9 +172,7 @@ services:
     restart: unless-stopped
     profiles:
       - vpn
-      - no-vpn
 
-  # For subtitles
   bazarr:
     container_name: bazarr
     image: lscr.io/linuxserver/bazarr:latest
@@ -239,13 +182,11 @@ services:
       - TZ=${TZ}
     volumes:
       - bazarr_config:/config
-      - ./data:/data
+      - /mnt/media/media:/data/media         
     restart: unless-stopped
     profiles:
       - vpn
-      - no-vpn
 
-  # For searching indexers (with VPN)
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
@@ -259,20 +200,6 @@ services:
       - nordvpn
     profiles:
       - vpn
-
-  # For searching indexers (without VPN)
-  prowlarr-no-vpn:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    ports:
-      - ${PROWLARR_PORT}:9696
-    environment:
-      - TZ=${TZ}
-    volumes:
-      - prowlarr_config:/config
-    restart: unless-stopped
-    profiles:
-      - no-vpn
 
 volumes:
   qbittorrent_config:
