@@ -23,6 +23,23 @@ stop: ## Stop all services
 logs: ## Show logs
 	@docker compose -f docker-compose.development.yml logs -f
 
+vpn-test: ## Test VPN connection for qBittorrent
+	@echo "🔍 Testing VPN connection..."
+	@echo ""
+	@echo "📍 Gluetun (VPN) IP:"
+	@docker exec gluetun wget -qO- ifconfig.me 2>/dev/null || echo "❌ Could not get Gluetun IP"
+	@echo ""
+	@echo "📍 qBittorrent IP (should match above):"
+	@docker exec qbittorrent wget -qO- ifconfig.me 2>/dev/null || echo "❌ Could not get qBittorrent IP"
+	@echo ""
+	@echo "📍 Your server's real IP (should be different):"
+	@wget -qO- ifconfig.me 2>/dev/null || curl -s ifconfig.me 2>/dev/null || echo "❌ Could not get server IP"
+	@echo ""
+	@echo "🔍 VPN Status:"
+	@docker exec gluetun cat /tmp/gluetun/ip 2>/dev/null && echo " (VPN Connected)" || echo "❌ VPN status unknown"
+	@echo ""
+	@echo "✅ If Gluetun IP ≠ Server IP, your VPN is working!"
+
 clean: ## Clean up Docker resources
 	@docker compose -f docker-compose.development.yml down -v
 	@docker system prune -f
@@ -32,12 +49,6 @@ setup: ## Complete automated setup (recommended for first time)
 	@if [ ! -f .env ]; then cp .env.example .env; echo "✅ Created .env file"; fi
 	@chmod +x setup-permissions.sh
 	@./setup-permissions.sh
-
-quick-setup: ## Quick setup (just directories and .env)
-	@if [ ! -f .env ]; then cp .env.example .env; echo "✅ Created .env file"; fi
-	@chmod +x setup-permissions.sh
-	@./setup-permissions.sh
-	@echo "✅ Quick setup complete - run 'make dev' to start"
 
 help: ## Show this help message
 	@echo "📋 Available commands:"
