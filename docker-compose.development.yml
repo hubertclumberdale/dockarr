@@ -1,29 +1,41 @@
 services:
-  # NordVPN service for protecting downloading services
-  nordvpn:
-    image: ghcr.io/bubuntux/nordvpn
-    container_name: nordvpn
+  # Gluetun VPN service for protecting downloading services
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
     cap_add:
       - NET_ADMIN
-      - NET_RAW
+    devices:
+      - /dev/net/tun:/dev/net/tun
     ports:
-      - ${QBITTORRENT_PORT}:8080
-      - ${PROWLARR_PORT}:9696
+      - ${QBITTORRENT_PORT}:8080   # qBittorrent WebUI
+      - 8888:8888/tcp              # Gluetun control server
     environment:
-      - TOKEN=${NORDVPN_TOKEN}
-      - CONNECT=${NORDVPN_COUNTRY:-United_States}
-      - TECHNOLOGY=NordLynx
-      - NETWORK=${NORDVPN_NETWORK:-192.168.0.0/16,172.16.0.0/12,10.0.0.0/8}
-      - DNS=1.1.1.1,8.8.8.8
+      # VPN Provider Configuration
+      - VPN_SERVICE_PROVIDER=nordvpn
+      - OPENVPN_USER=${NORDVPN_USERNAME}
+      - OPENVPN_PASSWORD=${NORDVPN_PASSWORD}
+      - SERVER_COUNTRIES=${NORDVPN_COUNTRY:-United States}
+      
+      # Network Configuration
       - FIREWALL=on
-      - CYBER_SEC=on
-      - NET_LOCAL=${NORDVPN_NETWORK:-192.168.0.0/16,172.16.0.0/12,10.0.0.0/8}
-      - PORTS=8080;9696
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
+      - FIREWALL_VPN_INPUT_PORTS=8080
+      - FIREWALL_INPUT_PORTS=8888
+      - DOT=on
+      - DOT_PROVIDERS=cloudflare
+      
+      # Health check
+      - HEALTH_VPN_DURATION_INITIAL=30s
+      - HEALTH_SUCCESS_WAIT_DURATION=5s
+      
+      # Timezone
+      - TZ=${TZ}
+    volumes:
+      - ./gluetun:/gluetun
+    networks:
+      - dockarr-network
     restart: unless-stopped
-    profiles:
-      - vpn
+
 
   config-processor:
     image: alpine:latest
@@ -41,26 +53,27 @@ services:
       - ./jellyseer:/jellyseer-config
       - ./config-processor:/scripts
     command: ["/scripts/process-configs.sh"]
-    profiles:
-      - vpn
+    networks:
+      - dockarr-network
+
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    network_mode: service:nordvpn
+    network_mode: service:gluetun
     environment:
       - TZ=${TZ}
       - WEBUI_PORT=8080
       - UMASK=022
     volumes:
       - qbittorrent_config:/config
-      - /mnt/media/media:/data/media          media condivisa
+      - ${DATA_PATH}:/data/media          # media condivisa
       - ./qbittorrent/qBittorrent.conf:/config/qBittorrent/qBittorrent.conf:ro
     restart: unless-stopped
     depends_on:
-      - nordvpn
-    profiles:
-      - vpn
+      gluetun:
+        condition: service_healthy
+
 
   flemmarr:
     image: pierremesure/flemmarr:latest
@@ -69,7 +82,7 @@ services:
       - .env
     volumes:
       - ./flemmarr:/config
-      - /mnt/media/media:/data/media         
+      - ${DATA_PATH}:/data/media         
     depends_on:
       config-processor:
         condition: service_completed_successfully
@@ -83,8 +96,9 @@ services:
         condition: service_started
       qbittorrent:
         condition: service_started
-    profiles:
-      - vpn
+    networks:
+      - dockarr-network
+
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -97,13 +111,14 @@ services:
       - .env
     volumes:
       - sonarr_config:/config
-      - /mnt/media/media:/data/media         
+      - ${DATA_PATH}:/data/media         
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
-    profiles:
-      - vpn
+    networks:
+      - dockarr-network
+
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -116,13 +131,14 @@ services:
       - .env
     volumes:
       - radarr_config:/config
-      - /mnt/media/media:/data/media         
+      - ${DATA_PATH}:/data/media         
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
-    profiles:
-      - vpn
+    networks:
+      - dockarr-network
+
 
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
@@ -133,13 +149,14 @@ services:
       - TZ=${TZ}
     volumes:
       - ./jellyseer:/app/config
-      - /mnt/media/media:/data/media          per accesso film/serie
+      - ${DATA_PATH}:/data/media          # per accesso film/serie
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
-    profiles:
-      - vpn
+    networks:
+      - dockarr-network
+
 
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
@@ -151,13 +168,14 @@ services:
       - TZ=${TZ}
     volumes:
       - ./jellyfin:/config
-      - /mnt/media/media:/data/media         
+      - ${DATA_PATH}:/data/media         
     restart: unless-stopped
     depends_on:
       config-processor:
         condition: service_completed_successfully
-    profiles:
-      - vpn
+    networks:
+      - dockarr-network
+
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -170,8 +188,9 @@ services:
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER}
       - TZ=${TZ}
     restart: unless-stopped
-    profiles:
-      - vpn
+    networks:
+      - dockarr-network
+
 
   bazarr:
     container_name: bazarr
@@ -182,24 +201,25 @@ services:
       - TZ=${TZ}
     volumes:
       - bazarr_config:/config
-      - /mnt/media/media:/data/media         
+      - ${DATA_PATH}:/data/media         
     restart: unless-stopped
-    profiles:
-      - vpn
+    networks:
+      - dockarr-network
+
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
-    network_mode: service:nordvpn
+    ports:
+      - ${PROWLARR_PORT}:9696
     environment:
       - TZ=${TZ}
     volumes:
       - prowlarr_config:/config
     restart: unless-stopped
-    depends_on:
-      - nordvpn
-    profiles:
-      - vpn
+    networks:
+      - dockarr-network
+
 
 volumes:
   qbittorrent_config:
@@ -208,3 +228,7 @@ volumes:
   radarr_config:
   bazarr_config:
   prowlarr_config:
+
+networks:
+  dockarr-network:
+    driver: bridge
