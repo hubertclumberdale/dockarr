@@ -41,13 +41,13 @@ MOVIES_DIR=""
 SERIES_DIR=""
 MUSIC_DIR=""
 
-# Source .env.example to get dynamic paths
+# Source .env to get dynamic paths
 if [ -f .env ]; then
-    # Extract paths from .env.example
-    DATA_PATH_VAL=$(grep "^DATA_PATH=" .env.example | cut -d'=' -f2)
-    MOVIES_PATH_VAL=$(grep "^MOVIES_PATH=" .env.example | cut -d'=' -f2)
-    SERIES_PATH_VAL=$(grep "^SERIES_PATH=" .env.example | cut -d'=' -f2)  
-    MUSIC_PATH_VAL=$(grep "^MUSIC_PATH=" .env.example | cut -d'=' -f2)
+    # Extract paths from .env (the actual config file)
+    DATA_PATH_VAL=$(grep "^DATA_PATH=" .env | cut -d'=' -f2)
+    MOVIES_PATH_VAL=$(grep "^MOVIES_PATH=" .env | cut -d'=' -f2)
+    SERIES_PATH_VAL=$(grep "^SERIES_PATH=" .env | cut -d'=' -f2)  
+    MUSIC_PATH_VAL=$(grep "^MUSIC_PATH=" .env | cut -d'=' -f2)
     
     # Use the actual DATA_PATH (could be relative like ./data or absolute like /mnt/media/media)
     BASE_DATA_DIR="$DATA_PATH_VAL"
@@ -55,7 +55,7 @@ if [ -f .env ]; then
     # Create base data directory
     mkdir -p "$BASE_DATA_DIR"
     
-    # Create media subdirectories based on the full paths from .env.example
+    # Create media subdirectories based on the full paths from .env
     # Extract the relative part after /data/media/
     MOVIES_DIR=$(echo "$MOVIES_PATH_VAL" | sed 's|^/data/media/||')
     SERIES_DIR=$(echo "$SERIES_PATH_VAL" | sed 's|^/data/media/||')  
