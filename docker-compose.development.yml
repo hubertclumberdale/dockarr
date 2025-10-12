@@ -168,7 +168,7 @@ services:
     devices:
       - /dev/dri:/dev/dri
     group_add:
-      - 44
+      - "44"
     ports:
       - ${JELLYFIN_PORT}:8096
       - ${JELLYFIN_HTTPS_PORT}:8920
