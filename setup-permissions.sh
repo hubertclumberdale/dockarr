@@ -5,7 +5,7 @@ echo "🔧 Setting up permissions for Dockarr on Zimablade/Linux..."
 # Get current user's UID and GID
 CURRENT_PUID=$(id -u)
 CURRENT_PGID=$(id -g)
-GPU_GID=$(stat -c "%g" /dev/dri/renderD128 2>/dev/null || echo "")
+GPU_GID=$(getent group video | cut -d: -f3)
 
 echo "📋 Detected User ID: $CURRENT_PUID"
 echo "📋 Detected Group ID: $CURRENT_PGID"
