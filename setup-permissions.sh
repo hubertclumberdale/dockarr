@@ -5,9 +5,11 @@ echo "🔧 Setting up permissions for Dockarr on Zimablade/Linux..."
 # Get current user's UID and GID
 CURRENT_PUID=$(id -u)
 CURRENT_PGID=$(id -g)
+GPU_GID=$(stat -c "%g" /dev/dri/renderD128 2>/dev/null || echo "")
 
 echo "📋 Detected User ID: $CURRENT_PUID"
 echo "📋 Detected Group ID: $CURRENT_PGID"
+echo "📋 Detected GPU Group ID: $GPU_GID"
 
 # Create .env from template if it doesn't exist
 if [ ! -f .env ]; then
