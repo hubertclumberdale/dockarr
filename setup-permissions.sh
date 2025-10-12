@@ -76,8 +76,7 @@ else
 fi
 
 # Create downloads directories
-mkdir -p "$BASE_DATA_DIR/downloads/complete"
-mkdir -p "$BASE_DATA_DIR/downloads/incomplete"
+mkdir -p "$BASE_DATA_DIR/media/downloads"
 
 # Set proper ownership
 chown -R $CURRENT_PUID:$CURRENT_PGID "$BASE_DATA_DIR"/
@@ -106,5 +105,4 @@ else
     echo "   $BASE_DATA_DIR/media/series"  
     echo "   $BASE_DATA_DIR/media/music"
 fi
-echo "   $BASE_DATA_DIR/downloads/complete"
-echo "   $BASE_DATA_DIR/downloads/incomplete"
+echo "   $BASE_DATA_DIR/media/downloads"
