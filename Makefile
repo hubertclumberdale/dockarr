@@ -50,6 +50,11 @@ setup: ## Complete automated setup (recommended for first time)
 	@chmod +x setup-permissions.sh
 	@./setup-permissions.sh
 
+jellyfin-debug: ## Run Jellyfin debug script and save output to jellyfin-debug-output.txt
+	@chmod +x jellyfin-debug.sh
+	@./jellyfin-debug.sh > jellyfin-debug-output.txt 2>&1
+	@echo "🛠️  Jellyfin debug output saved to jellyfin-debug-output.txt"
+
 help: ## Show this help message
 	@echo "📋 Available commands:"
 	@echo ""
