@@ -32,6 +32,14 @@ else
     echo "✅ Added PGID=$CURRENT_PGID to .env"
 fi
 
+if grep -q "^GPU_GID=" .env; then
+    sed -i "s/^GPU_GID=.*/GPU_GID=$GPU_GID/" .env
+    echo "✅ Updated GPU_GID=$GPU_GID in .env"
+else
+    echo "GPU_GID=$GPU_GID" >> .env
+    echo "✅ Added GPU_GID=$GPU_GID to .env"
+fi
+
 # Create data directories with proper permissions
 echo "📁 Creating data directories..."
 
