@@ -1,0 +1,16 @@
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    ports:
+      - ${JELLYSEERR_PORT}:5055
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./jellyseer:/app/config
+      - ${DATA_PATH}:/data/media # per accesso film/serie
+    restart: unless-stopped
+    depends_on:
+      config-processor:
+        condition: service_completed_successfully
+    networks:
+      - dockarr-network

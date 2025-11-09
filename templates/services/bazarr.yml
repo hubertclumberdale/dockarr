@@ -1,0 +1,15 @@
+  bazarr:
+    container_name: bazarr
+    image: lscr.io/linuxserver/bazarr:latest
+    ports:
+      - ${BAZARR_PORT}:6767
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ}
+    volumes:
+      - bazarr_config:/config
+      - ${DATA_PATH}:/data/media
+    restart: unless-stopped
+    networks:
+      - dockarr-network

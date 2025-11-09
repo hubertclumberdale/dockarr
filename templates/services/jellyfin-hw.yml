@@ -1,0 +1,24 @@
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    group_add:
+      - "44"
+    devices:
+      - /dev/dri:/dev/dri  # For hardware acceleration
+    ports:
+      - ${JELLYFIN_PORT}:8096
+      - ${JELLYFIN_HTTPS_PORT}:8920
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ}
+      - JELLYFIN_PublishedServerUrl=${JELLYFIN_PUBLISHED_SERVER_URL:-}
+    volumes:
+      - ./jellyfin:/config
+      - ${DATA_PATH}:/data/media
+    restart: unless-stopped
+    depends_on:
+      config-processor:
+        condition: service_completed_successfully
+    networks:
+      - dockarr-network

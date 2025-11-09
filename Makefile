@@ -76,6 +76,28 @@ setup: ## Complete automated setup (recommended for first time)
 	@chmod +x setup-permissions.sh
 	@./setup-permissions.sh
 
+wizard: ## Run interactive setup wizard
+	@./setup-wizard.sh
+
+build-compose: ## Build docker-compose.yml from wizard configuration
+	@./wizard/compose-builder.sh
+
+wizard-deploy: ## Run wizard and immediately deploy services
+	@./setup-wizard.sh
+	@./wizard/compose-builder.sh
+	@if [ -f .wizard-config ]; then \
+		. ./.wizard-config && \
+		if [ "$$ENVIRONMENT" = "development" ]; then \
+			$(MAKE) dev; \
+		else \
+			$(MAKE) start; \
+		fi; \
+	fi
+
+wizard-clean: ## Clean wizard configuration and generated files
+	@rm -f .wizard-config
+	@echo "🧹 Cleaned wizard configuration"
+
 help: ## Show this help message
 	@echo "📋 Available commands:"
 	@echo ""
