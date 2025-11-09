@@ -142,36 +142,12 @@ initial_setup_step() {
     fi
 }
 
-# Environment selection step
-environment_step() {
-    print_step "Environment Selection"
-    
-    local environments=("Production (docker-compose.yml)" "Development (docker-compose.development.yml)")
-    show_menu "Select your target environment:" "${environments[@]}"
-    local env_choice=$?
-    
-    case $env_choice in
-        0)
-            ENVIRONMENT="production"
-            print_success "Selected: Production environment"
-            ;;
-        1)
-            ENVIRONMENT="development"
-            print_success "Selected: Development environment"
-            ;;
-    esac
-}
-
 # Service selection step
 service_selection_step() {
     print_step "Service Selection"
     
     local selection_types=(
-        "Basic preset (Essential + Media + Download services)" 
         "Complete preset (All services included)"
-        "Minimal preset (Just Jellyfin media server)"
-        "Media-only preset (Jellyfin + Jellyseerr)"
-        "Download stack preset (All download-related services)"
         "Custom selection (Choose individual services)"
     )
     
@@ -180,26 +156,10 @@ service_selection_step() {
     
     case $selection_choice in
         0)
-            IFS=',' read -ra SELECTED_SERVICES <<< "$(get_bundle_services "basic")"
-            print_success "Selected: Basic preset (${#SELECTED_SERVICES[@]} services)"
-            ;;
-        1)
             IFS=',' read -ra SELECTED_SERVICES <<< "$(get_bundle_services "complete")"
             print_success "Selected: Complete preset (${#SELECTED_SERVICES[@]} services)"
             ;;
-        2)
-            IFS=',' read -ra SELECTED_SERVICES <<< "$(get_bundle_services "minimal")"
-            print_success "Selected: Minimal preset (${#SELECTED_SERVICES[@]} services)"
-            ;;
-        3)
-            IFS=',' read -ra SELECTED_SERVICES <<< "$(get_bundle_services "media-only")"
-            print_success "Selected: Media-only preset (${#SELECTED_SERVICES[@]} services)"
-            ;;
-        4)
-            IFS=',' read -ra SELECTED_SERVICES <<< "$(get_bundle_services "download-stack")"
-            print_success "Selected: Download stack preset (${#SELECTED_SERVICES[@]} services)"
-            ;;
-        5)
+        1)
             custom_service_selection
             ;;
     esac
@@ -326,7 +286,6 @@ main() {
     # Run wizard steps
     clean_setup_step
     initial_setup_step  
-    environment_step
     service_selection_step
     hardware_acceleration_step
     

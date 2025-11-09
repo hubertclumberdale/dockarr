@@ -25,7 +25,6 @@ source "$WIZARD_DIR/service-config.sh"
 
 # Default output files
 COMPOSE_FILE="$PROJECT_ROOT/docker-compose.yml"
-DEV_COMPOSE_FILE="$PROJECT_ROOT/docker-compose.development.yml"
 
 # Utility functions
 print_success() {
@@ -159,17 +158,6 @@ build_compose() {
     print_success "Docker compose file built: $output_file"
 }
 
-# Backup existing compose file
-backup_existing_compose() {
-    local compose_file="$1"
-    
-    if [[ -f "$compose_file" ]]; then
-        local backup_file="${compose_file}.backup.$(date +%Y%m%d_%H%M%S)"
-        cp "$compose_file" "$backup_file"
-        print_info "Backed up existing file to: $backup_file"
-    fi
-}
-
 # Validate the generated compose file
 validate_compose() {
     local compose_file="$1"
@@ -190,15 +178,9 @@ validate_compose() {
 perform_cleanup() {
     if $DO_CLEAN; then
         print_info "Performing cleanup..."
-        
-        # Determine which compose file to use for cleanup
-        local cleanup_compose="$COMPOSE_FILE"
-        if [[ "$ENVIRONMENT" == "development" ]]; then
-            cleanup_compose="$DEV_COMPOSE_FILE"
-        fi
-        
-        if [[ -f "$cleanup_compose" ]]; then
-            docker-compose -f "$cleanup_compose" down -v 2>/dev/null || true
+    
+        if [[ -f "$COMPOSE_FILE" ]]; then
+            docker-compose -f "$COMPOSE_FILE" down -v 2>/dev/null || true
             print_success "Cleanup completed"
         else
             print_info "No existing compose file to clean"
@@ -247,38 +229,23 @@ main() {
     # Load configuration
     load_config
     
-    # Determine output file based on environment
-    local output_file="$COMPOSE_FILE"
-    if [[ "$ENVIRONMENT" == "development" ]]; then
-        output_file="$DEV_COMPOSE_FILE"
-    fi
-    
     # Show summary
-    show_build_summary "$output_file"
-    
-    # Backup existing compose file
-    backup_existing_compose "$output_file"
+    show_build_summary "$COMPOSE_FILE"
     
     # Perform cleanup if requested
     perform_cleanup
     
     # Build the compose file
-    build_compose "$output_file"
+    build_compose "$COMPOSE_FILE"
     
     # Validate the generated file
-    validate_compose "$output_file"
+    validate_compose "$COMPOSE_FILE"
     
     # Perform setup if requested
     perform_setup
     
     print_success "Build completed successfully!"
     print_info "You can now run:"
-    
-    if [[ "$ENVIRONMENT" == "development" ]]; then
-        echo -e "  ${BLUE}make dev${NC}     # Start development environment"
-    else
-        echo -e "  ${BLUE}make start${NC}   # Start production environment"
-    fi
     
     echo -e "  ${BLUE}make logs${NC}    # View logs"
     echo -e "  ${BLUE}make stop${NC}    # Stop all services"

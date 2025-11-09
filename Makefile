@@ -1,4 +1,4 @@
-.PHONY: dev stop logs clean setup quick-setup help
+.PHONY: dev stop logs clean setup help wizard wizard-clean
 
 dev: ## Start development environment
 	@if [ ! -f .env ]; then cp .env.example .env; echo "✅ Created .env file"; fi
@@ -76,22 +76,16 @@ setup: ## Complete automated setup (recommended for first time)
 	@chmod +x setup-permissions.sh
 	@./setup-permissions.sh
 
-wizard: ## Run interactive setup wizard
-	@./setup-wizard.sh
 
 build-compose: ## Build docker-compose.yml from wizard configuration
 	@./wizard/compose-builder.sh
 
-wizard-deploy: ## Run wizard and immediately deploy services
+wizard: ## Run wizard and immediately deploy services
 	@./setup-wizard.sh
 	@./wizard/compose-builder.sh
 	@if [ -f .wizard-config ]; then \
 		. ./.wizard-config && \
-		if [ "$$ENVIRONMENT" = "development" ]; then \
-			$(MAKE) dev; \
-		else \
-			$(MAKE) start; \
-		fi; \
+		$(MAKE) start; \
 	fi
 
 wizard-clean: ## Clean wizard configuration and generated files

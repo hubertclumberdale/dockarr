@@ -31,11 +31,7 @@ flemmarr:config-processor,sonarr,radarr,prowlarr,bazarr,qbittorrent
 
 # Predefined service bundles (format: bundle_name:service1,service2,...)
 BUNDLES_DATA="
-minimal:config-processor,jellyfin
-basic:config-processor,gluetun,qbittorrent,sonarr,radarr,jellyfin,prowlarr
-complete:config-processor,gluetun,qbittorrent,sonarr,radarr,jellyfin,jellyseerr,prowlarr,bazarr,flaresolverr,dozzle
-media-only:config-processor,jellyfin,jellyseerr
-download-stack:config-processor,gluetun,qbittorrent,sonarr,radarr,prowlarr,bazarr,flaresolverr
+complete:bazarr,config-processor,dozzle,flaresolverr,flemmarr,gluetun,jellyfin,jellyseerr,prowlarr,qbittorrent,radarr,sonarr
 "
 
 # Functions to work with services
