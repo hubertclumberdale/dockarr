@@ -1,15 +1,11 @@
-navidrome:
-  image: deluan/navidrome:latest
-  user: ${PUID:-1000}:${PGID:-1000}
-  ports:
-    - "${NAVIDROME_PORT}:4533"
-  restart: unless-stopped
-  env_file:
-      - .env
-  volumes:
-    - ${DATA_PATH}:/data/media
-    - ${DATA_PATH}:/music:ro
-  volumes:
-      - lidarr_config:/config
+  navidrome:
+    image: deluan/navidrome:latest
+    user: ${PUID:-1000}:${PGID:-1000}
+    ports:
+      - "${NAVIDROME_PORT}:4533"
+    restart: unless-stopped
+    env_file:
+        - .env
+    volumes:
       - ${DATA_PATH}:/data/media
-      - ${DATA_PATH}/downloads:/downloads
+      - ${DATA_PATH}:/music:ro
