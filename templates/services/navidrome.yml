@@ -8,7 +8,7 @@ navidrome:
       - .env
   volumes:
     - ${DATA_PATH}:/data/media
-    - ${DATA_PATH}/media:/music:ro
+    - ${DATA_PATH}:/music:ro
   volumes:
       - lidarr_config:/config
       - ${DATA_PATH}:/data/media
