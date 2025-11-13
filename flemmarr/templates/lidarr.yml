@@ -1,0 +1,47 @@
+lidarr:
+  server:
+    address: ${LIDARR_HOST}
+    port: ${LIDARR_PORT}
+  config:
+    host:
+      analyticsEnabled: false
+    ui:
+      firstDayOfWeek: 1 # 0 = Sunday, 1 = Monday
+      timeFormat: HH:mm # HH:mm = 17:30, h(:mm)a = 5:30PM
+      uiLanguage: ${UI_LANGUAGE}
+  rootfolder:
+    - name: Music
+      path: ${MUSIC_PATH}
+      defaultTags: []
+      defaultQualityProfileId: 1
+      defaultMetadataProfileId: 1
+  downloadclient:
+    - name: qBittorrent
+      enable: true
+      protocol: torrent
+      priority: 2
+      removeCompletedDownloads: true
+      removeFailedDownloads: true
+      fields:
+      - name: host
+        value: ${QBITTORRENT_HOST}
+      - name: port
+        value: ${QBITTORRENT_PORT}
+      - name: username
+        value: ${QBITTORRENT_USERNAME}
+      - name: password
+        value: ${QBITTORRENT_PASSWORD}
+      - name: movieCategory
+        value: movies
+      - name: recentMoviePriority
+        value: 0
+      - name: olderMoviePriority
+        value: 0
+      - name: initialState
+        value: 0
+      - name: sequentialOrder
+        value: false
+      - name: firstAndLast
+        value: false
+      implementation: QBittorrent
+      configContract: QBittorrentSettings
