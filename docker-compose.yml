@@ -47,15 +47,11 @@ services:
       - ./radarr:/radarr-templates:ro
       - ./sonarr:/sonarr-templates:ro
       - ./flemmarr:/flemmarr-templates:ro
-      - ./lidarr:/lidarr-templates:ro
-
       - radarr_config:/radarr-config
       - sonarr_config:/sonarr-config
-      - lidarr_config:/lidarr-config
       - ./flemmarr:/flemmarr-config
       - ./jellyfin:/jellyfin-config
       - ./jellyseer:/jellyseer-config
-
       - ./config-processor:/scripts
     command: ["/scripts/process-configs.sh"]
     networks:
@@ -99,8 +95,6 @@ services:
       prowlarr:
         condition: service_started
       bazarr:
-        condition: service_started
-      lidarr:
         condition: service_started
       qbittorrent:
         condition: service_started
@@ -246,32 +240,12 @@ services:
     networks:
       - dockarr-network
 
-  # For music management
-  lidarr:
-    image: lscr.io/linuxserver/lidarr:latest
-    container_name: lidarr
-    ports:
-      - ${LIDARR_PORT}:8686
-    environment:
-      - TZ=${TZ}
-    volumes:
-      - lidarr_config:/config
-      - ./data:/data
-      - qbittorrent_downloads:/downloads
-    restart: unless-stopped
-    depends_on:
-      config-processor:
-        condition: service_completed_successfully
-      qbittorrent:
-        condition: service_started
-
 volumes:
   qbittorrent_config:
   qbittorrent_downloads:
   sonarr_config:
   radarr_config:
   bazarr_config:
-  lidarr_config:
   prowlarr_config:
 
 networks:

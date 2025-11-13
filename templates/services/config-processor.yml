@@ -1,0 +1,18 @@
+  config-processor:
+    image: alpine:latest
+    container_name: config-processor
+    env_file:
+      - .env
+    volumes:
+      - ./radarr:/radarr-templates:ro
+      - ./sonarr:/sonarr-templates:ro
+      - ./flemmarr:/flemmarr-templates:ro
+      - radarr_config:/radarr-config
+      - sonarr_config:/sonarr-config
+      - ./flemmarr:/flemmarr-config
+      - ./jellyfin:/jellyfin-config
+      - ./jellyseer:/jellyseer-config
+      - ./config-processor:/scripts
+    command: ["/scripts/process-configs.sh"]
+    networks:
+      - dockarr-network

@@ -1,0 +1,11 @@
+volumes:
+  qbittorrent_config:
+  qbittorrent_downloads:
+  sonarr_config:
+  radarr_config:
+  bazarr_config:
+  prowlarr_config:
+
+networks:
+  dockarr-network:
+    driver: bridge
