@@ -10,6 +10,7 @@ gluetun:download:VPN service:Protects download services
 qbittorrent:download:Torrent client:Download torrents via VPN
 sonarr:media:TV show manager:Manages TV series downloads
 radarr:media:Movie manager:Manages movie downloads
+lidarr:media:Music manager:Manages music downloads
 jellyfin:media:Media server:Streams your media library
 jellyseerr:media:Request manager:Request movies and TV shows
 prowlarr:indexing:Indexer manager:Manages torrent indexers
@@ -24,6 +25,7 @@ DEPENDENCIES_DATA="
 qbittorrent:gluetun
 sonarr:config-processor
 radarr:config-processor
+lidarr:config-processor
 jellyfin:config-processor
 jellyseerr:config-processor
 flemmarr:config-processor,sonarr,radarr,prowlarr,bazarr,qbittorrent
@@ -31,7 +33,7 @@ flemmarr:config-processor,sonarr,radarr,prowlarr,bazarr,qbittorrent
 
 # Predefined service bundles (format: bundle_name:service1,service2,...)
 BUNDLES_DATA="
-complete:bazarr,config-processor,dozzle,flaresolverr,flemmarr,gluetun,jellyfin,jellyseerr,prowlarr,qbittorrent,radarr,sonarr
+complete:bazarr,config-processor,dozzle,flaresolverr,flemmarr,gluetun,jellyfin,jellyseerr,lidarr,prowlarr,qbittorrent,radarr,sonarr
 "
 
 # Functions to work with services

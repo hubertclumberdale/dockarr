@@ -5,6 +5,7 @@ volumes:
   radarr_config:
   bazarr_config:
   prowlarr_config:
+  lidarr_config:
 
 networks:
   dockarr-network:
