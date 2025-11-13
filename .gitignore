@@ -1,5 +1,8 @@
 # Docker service runtime data (keep config templates)
 
+# Wizard configuration
+.wizard-config
+
 
 flemmarr/config.yml
 flemmarr/config.template.yml

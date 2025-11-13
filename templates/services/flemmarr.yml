@@ -1,0 +1,23 @@
+  flemmarr:
+    image: pierremesure/flemmarr:latest
+    container_name: flemmarr
+    env_file:
+      - .env
+    volumes:
+      - ./flemmarr:/config
+      - ${DATA_PATH}:/data/media
+    depends_on:
+      config-processor:
+        condition: service_completed_successfully
+      sonarr:
+        condition: service_started
+      radarr:
+        condition: service_started
+      prowlarr:
+        condition: service_started
+      bazarr:
+        condition: service_started
+      qbittorrent:
+        condition: service_started
+    networks:
+      - dockarr-network
