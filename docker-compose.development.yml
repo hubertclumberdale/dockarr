@@ -165,8 +165,6 @@ services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
-    devices:
-      - /dev/dri:/dev/dri
     group_add:
       - "44"
     ports:
