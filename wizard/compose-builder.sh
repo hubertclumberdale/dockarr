@@ -51,6 +51,12 @@ load_config() {
     fi
     
     source "$WIZARD_CONFIG_FILE"
+    
+    # Convert space-separated string to array for bash compatibility
+    if [[ -n "$SELECTED_SERVICES" ]]; then
+        read -ra SELECTED_SERVICES <<< "$SELECTED_SERVICES"
+    fi
+    
     print_info "Loaded configuration from $WIZARD_CONFIG_FILE"
 }
 

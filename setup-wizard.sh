@@ -266,12 +266,22 @@ show_summary() {
 
 # Save configuration for the builder
 save_config() {
+    # Convert array to space-separated string for sh compatibility
+    local services_string=""
+    for service in "${SELECTED_SERVICES[@]}"; do
+        if [ -n "$services_string" ]; then
+            services_string="$services_string $service"
+        else
+            services_string="$service"
+        fi
+    done
+    
     cat > "$WIZARD_CONFIG_FILE" << EOF
 ENVIRONMENT="$ENVIRONMENT"
 DO_CLEAN=$DO_CLEAN
 DO_SETUP=$DO_SETUP
 HARDWARE_ACCELERATION=$HARDWARE_ACCELERATION
-SELECTED_SERVICES=($(printf '"%s" ' "${SELECTED_SERVICES[@]}"))
+SELECTED_SERVICES="$services_string"
 EOF
     print_success "Configuration saved to $WIZARD_CONFIG_FILE"
 }
