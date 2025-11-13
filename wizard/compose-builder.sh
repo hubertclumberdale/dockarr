@@ -170,12 +170,12 @@ validate_compose() {
     
     print_info "Validating docker-compose file..."
     
-    if docker-compose -f "$compose_file" config > /dev/null 2>&1; then
+    if docker compose -f "$compose_file" config > /dev/null 2>&1; then
         print_success "Docker-compose file is valid"
     else
         print_error "Docker-compose file validation failed"
         print_info "Running docker-compose config to show errors:"
-        docker-compose -f "$compose_file" config || true
+        docker compose -f "$compose_file" config || true
         exit 1
     fi
 }
@@ -186,7 +186,7 @@ perform_cleanup() {
         print_info "Performing cleanup..."
     
         if [[ -f "$COMPOSE_FILE" ]]; then
-            docker-compose -f "$COMPOSE_FILE" down -v 2>/dev/null || true
+            docker compose -f "$COMPOSE_FILE" down -v 2>/dev/null || true
             print_success "Cleanup completed"
         else
             print_info "No existing compose file to clean"
