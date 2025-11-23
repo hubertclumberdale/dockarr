@@ -12,7 +12,7 @@ echo "Composing flemmarr config from separate templates..."
 > "$OUTPUT_FILE"
 
 # Lista dei servizi nell'ordine corretto
-services="sonarr radarr prowlarr bazarr"
+services="sonarr radarr lidarr prowlarr bazarr"
 
 # Componi il file finale
 for service in $services; do
